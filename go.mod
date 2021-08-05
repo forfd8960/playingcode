@@ -1,4 +1,4 @@
-module github.com/forfd8960/playingcode/calculator
+module github.com/forfd8960/playingcode
 
 go 1.16
 

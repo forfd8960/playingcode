@@ -1,8 +1,16 @@
 package calculator
 
 import (
+	"fmt"
 	"strconv"
+	"strings"
 	"unicode"
+)
+
+var (
+	errUnsupportToken = func(r rune) error {
+		return fmt.Errorf("unsupported token: %s", string(r))
+	}
 )
 
 type tokenType int
@@ -32,8 +40,61 @@ type scanner struct {
 	current int
 }
 
+func newScanner(exp string) *scanner {
+	return &scanner{
+		exp:    exp,
+		runes:  []rune(exp),
+		tokens: make([]*token, 0, 10),
+	}
+}
+
+func (s *scanner) String() string {
+	sb := &strings.Builder{}
+	for _, t := range s.tokens {
+		sb.WriteString(fmt.Sprintf("type: %d, lexeme: %s\n", t.TkType, t.Lexeme))
+	}
+	return sb.String()
+}
+
 // scanExpression read the expression string and split it into tokens
-func (s *scanner) scanExpression() []*token {
+func (s *scanner) scanExpression() error {
+	for !s.isEnd() {
+		s.start = s.current
+		if err := s.scanToken(); err != nil {
+			return err
+		}
+	}
+	s.tokens = append(s.tokens, &token{
+		TkType:  eof,
+		Lexeme:  "",
+		Literal: nil,
+	})
+	return nil
+}
+
+func (s *scanner) scanToken() error {
+	r := s.advance()
+	switch r {
+	case '(':
+		s.addToken(leftParent, nil)
+	case ')':
+		s.addToken(rightParent, nil)
+	case '+':
+		s.addToken(plus, nil)
+	case '-':
+		s.addToken(minus, nil)
+	case '*':
+		s.addToken(star, nil)
+	case '/':
+		s.addToken(slash, nil)
+	case ' ', '\r', '\t', '\n':
+	default:
+		if s.isDigit(r) {
+			s.getNumber()
+		} else {
+			return errUnsupportToken(r)
+		}
+	}
 	return nil
 }
 
