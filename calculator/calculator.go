@@ -1,7 +1,5 @@
 package calculator
 
-import "fmt"
-
 // Calculator ...
 type Calculator struct {
 	s      string
