@@ -8,6 +8,7 @@ import (
 
 func TestCalculator(t *testing.T) {
 	t.Run("simple math", test1Plus2)
+	t.Run("float math", floatMath)
 	t.Run("left and right parent", leftAndRightParent)
 	t.Run("one parentheses", oneParentheses)
 	t.Run("left parentheses not match", parenthesesNotMatch)
@@ -24,6 +25,17 @@ func test1Plus2(t *testing.T) {
 	result, err := cal.Result()
 	if assert.Nil(t, err) {
 		assert.Equal(t, float64(3), result)
+	}
+}
+
+func floatMath(t *testing.T) {
+	cal := NewCalculator("2.22 + 2.88")
+	err := cal.Exec()
+	assert.Nil(t, err)
+
+	result, err := cal.Result()
+	if assert.Nil(t, err) {
+		assert.Equal(t, float64(5.1), result)
 	}
 }
 
