@@ -2,9 +2,8 @@ package calculator
 
 // stack used to put operator and operand
 type stack struct {
-	tokens  []*token
-	length  int
-	current int
+	tokens []*token
+	length int
 }
 
 func (s *stack) push(t *token) {

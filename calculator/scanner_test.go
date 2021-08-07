@@ -11,6 +11,7 @@ func TestScanner(t *testing.T) {
 	t.Run("success get tokens", testSuccessGetTokens)
 	t.Run("success get numbers", testGetNumberToken)
 	t.Run("unsupport token", testUnsupportToken)
+	t.Run("get '**' token", getDoubleStarToken)
 }
 
 func testSuccessGetTokens(t *testing.T) {
@@ -59,4 +60,20 @@ func testUnsupportToken(t *testing.T) {
 	if assert.NotNil(t, err) {
 		assert.EqualError(t, errors.New("unsupported token: %"), err.Error())
 	}
+}
+
+func getDoubleStarToken(t *testing.T) {
+	expression := "2 ** 10"
+	sc := newScanner(expression)
+	err := sc.scanExpression()
+	assert.Nil(t, err)
+
+	t.Logf("tokens: %s\n", sc)
+	expectTokens := []*token{
+		{TkType: number, Lexeme: "2", Literal: float64(2)},
+		{TkType: doubleStar, Lexeme: "**", Literal: nil},
+		{TkType: number, Lexeme: "10", Literal: float64(10)},
+		{TkType: eof},
+	}
+	assert.Equal(t, expectTokens, sc.tokens)
 }

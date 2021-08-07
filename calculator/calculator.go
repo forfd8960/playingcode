@@ -3,11 +3,13 @@ package calculator
 import (
 	"errors"
 	"fmt"
+	"math"
 )
 
 var (
 	operatorPrecedence = map[tokenType]int{
 		rightParent: 3,
+		doubleStar:  2,
 		star:        2,
 		slash:       2,
 		plus:        1,
@@ -50,7 +52,7 @@ func (cal *Calculator) Exec() error {
 
 func (cal *Calculator) putTokensToStack(tokens []*token) error {
 	tIdx := 0
-	for tIdx < len(tokens) {
+	for ; tIdx < len(tokens); tIdx++ {
 		t := tokens[tIdx]
 
 		switch t.TkType {
@@ -68,8 +70,6 @@ func (cal *Calculator) putTokensToStack(tokens []*token) error {
 				return err
 			}
 		}
-
-		tIdx++
 	}
 
 	return cal.cleanupOperator()
@@ -153,6 +153,8 @@ func (cal *Calculator) evalBinary(op *token) (*token, error) {
 		result.Literal = val1 - val2
 	case "*":
 		result.Literal = val1 * val2
+	case "**":
+		result.Literal = math.Pow(val1, val2)
 	case "/":
 		if val2 == 0 {
 			return nil, errDivisorZero

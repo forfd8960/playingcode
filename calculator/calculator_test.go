@@ -15,6 +15,7 @@ func TestCalculator(t *testing.T) {
 	t.Run("right parentheses not match", rightParenthesesNotMatch)
 	t.Run("unsupport operator", unsupportOperator)
 	t.Run("divisor is zero", divisorIsZero)
+	t.Run("calculate pow", testPow)
 }
 
 func test1Plus2(t *testing.T) {
@@ -83,4 +84,15 @@ func divisorIsZero(t *testing.T) {
 	cal := NewCalculator("10 / 0")
 	err := cal.Exec()
 	assert.Equal(t, errDivisorZero, err)
+}
+
+func testPow(t *testing.T) {
+	cal := NewCalculator("(2 ** 10)")
+	err := cal.Exec()
+	assert.Nil(t, err)
+
+	result, err := cal.Result()
+	if assert.Nil(t, err) {
+		assert.Equal(t, float64(1024), result)
+	}
 }

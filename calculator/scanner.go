@@ -22,6 +22,7 @@ const (
 	plus                         // +
 	slash                        // "/"
 	star                         // '*'
+	doubleStar                   // x ** y -> math.pow
 	number                       // 123, 9, 10
 	eof                          // end token type
 )
@@ -84,7 +85,11 @@ func (s *scanner) scanToken() error {
 	case '-':
 		s.addToken(minus, nil)
 	case '*':
-		s.addToken(star, nil)
+		if s.match('*') { // check '**' token
+			s.addToken(doubleStar, nil)
+		} else {
+			s.addToken(star, nil)
+		}
 	case '/':
 		s.addToken(slash, nil)
 	case ' ', '\r', '\t', '\n':
@@ -105,6 +110,21 @@ func (s *scanner) isEnd() bool {
 func (s *scanner) advance() rune {
 	s.current++
 	return s.runes[s.current-1]
+}
+
+// match check if current rune is equals r
+// if euqals then current move to next rune
+func (s *scanner) match(r rune) bool {
+	if s.isEnd() {
+		return false
+	}
+
+	if s.runes[s.current] != r {
+		return false
+	}
+
+	s.current++
+	return true
 }
 
 func (s *scanner) addToken(tokenType tokenType, literal interface{}) {
