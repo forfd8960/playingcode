@@ -2,9 +2,6 @@ package qserver
 
 import "sync"
 
-type Consumer interface {
-}
-
 type Channel struct {
 	qsrv *QServer
 
