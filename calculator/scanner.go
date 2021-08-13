@@ -28,9 +28,9 @@ const (
 )
 
 type token struct {
-	TkType  tokenType
-	Lexeme  string
-	Literal interface{}
+	TkType tokenType
+	Text   string
+	Value  interface{}
 }
 
 type scanner struct {
@@ -52,7 +52,7 @@ func newScanner(exp string) *scanner {
 func (s *scanner) String() string {
 	sb := &strings.Builder{}
 	for _, t := range s.tokens {
-		sb.WriteString(fmt.Sprintf("type: %d, lexeme: %s\n", t.TkType, t.Lexeme))
+		sb.WriteString(fmt.Sprintf("type: %d, text: %s\n", t.TkType, t.Text))
 	}
 	return sb.String()
 }
@@ -66,9 +66,9 @@ func (s *scanner) scanExpression() error {
 		}
 	}
 	s.tokens = append(s.tokens, &token{
-		TkType:  eof,
-		Lexeme:  "",
-		Literal: nil,
+		TkType: eof,
+		Text:   "",
+		Value:  nil,
 	})
 	return nil
 }
@@ -127,12 +127,12 @@ func (s *scanner) match(r rune) bool {
 	return true
 }
 
-func (s *scanner) addToken(tokenType tokenType, literal interface{}) {
-	lexeme := string(s.runes[s.start:s.current])
+func (s *scanner) addToken(tokenType tokenType, value interface{}) {
+	text := string(s.runes[s.start:s.current])
 	s.tokens = append(s.tokens, &token{
-		TkType:  tokenType,
-		Lexeme:  lexeme,
-		Literal: literal,
+		TkType: tokenType,
+		Text:   text,
+		Value:  value,
 	})
 }
 

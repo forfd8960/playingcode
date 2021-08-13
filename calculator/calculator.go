@@ -112,7 +112,7 @@ func (cal *Calculator) cleanupOperator() error {
 func (cal *Calculator) eval(t *token) error {
 	prec, ok := operatorPrecedence[t.TkType]
 	if !ok {
-		return errUnsupportOperator(t.Lexeme)
+		return errUnsupportOperator(t.Text)
 	}
 
 	previous := cal.operators.peek()
@@ -143,23 +143,23 @@ func (cal *Calculator) evalBinary(op *token) (*token, error) {
 		return nil, errInvalidExpression
 	}
 
-	val1, val2 := n1.Literal.(float64), n2.Literal.(float64)
+	val1, val2 := n1.Value.(float64), n2.Value.(float64)
 
 	result := &token{TkType: number}
-	switch op.Lexeme {
+	switch op.Text {
 	case "+":
-		result.Literal = val1 + val2
+		result.Value = val1 + val2
 	case "-":
-		result.Literal = val1 - val2
+		result.Value = val1 - val2
 	case "*":
-		result.Literal = val1 * val2
+		result.Value = val1 * val2
 	case "**":
-		result.Literal = math.Pow(val1, val2)
+		result.Value = math.Pow(val1, val2)
 	case "/":
 		if val2 == 0 {
 			return nil, errDivisorZero
 		}
-		result.Literal = val1 / val2
+		result.Value = val1 / val2
 	}
 
 	return result, nil
@@ -172,5 +172,5 @@ func (cal *Calculator) Result() (float64, error) {
 		return -1, errInvalidExpression
 	}
 
-	return result.Literal.(float64), nil
+	return result.Value.(float64), nil
 }
