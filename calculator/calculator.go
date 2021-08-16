@@ -51,8 +51,7 @@ func (cal *Calculator) Exec() error {
 }
 
 func (cal *Calculator) putTokensToStack(tokens []*token) error {
-	tIdx := 0
-	for ; tIdx < len(tokens); tIdx++ {
+	for tIdx := 0; tIdx < len(tokens); tIdx++ {
 		t := tokens[tIdx]
 
 		switch t.TkType {
@@ -65,7 +64,7 @@ func (cal *Calculator) putTokensToStack(tokens []*token) error {
 			if err := cal.popAndEvalUtilLeftParent(); err != nil {
 				return err
 			}
-		default:
+		default: // + - * /
 			if err := cal.eval(t); err != nil {
 				return err
 			}
@@ -115,12 +114,15 @@ func (cal *Calculator) eval(t *token) error {
 		return errUnsupportOperator(t.Text)
 	}
 
+	// if there is no operator, then push current operator to ops stack
 	previous := cal.operators.peek()
 	if previous == nil {
 		cal.operators.push(t)
 		return nil
 	}
 
+	// if we have ops, and the prec > current ops prec
+	// we first calculate the previous operator, and push the result into opr stack
 	prevPrec := operatorPrecedence[previous.TkType]
 	if prevPrec >= prec {
 		result, err := cal.evalBinary(previous)
@@ -132,6 +134,7 @@ func (cal *Calculator) eval(t *token) error {
 		cal.operands.push(result)
 	}
 
+	// and then push current operator
 	cal.operators.push(t)
 	return nil
 }
