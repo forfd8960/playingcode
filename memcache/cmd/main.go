@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	cache := memcache.NewCache(128, 2*time.Second)
+	cache := memcache.NewCache(128, 1*time.Second)
 	val, ok := cache.Get("test-key1")
 	fmt.Printf("val: %v, ok: %v\n", val, ok)
 
@@ -18,7 +18,7 @@ func main() {
 	fmt.Printf("key: %v, value: %v\n", key, val)
 
 	key2 := "test-key2"
-	cache.SetWithTTL(key2, 1000, 4*time.Second)
+	cache.SetWithTTL(key2, 1000, 2*time.Second)
 	val, _ = cache.Get(key2)
 	fmt.Printf("key: %v, value: %v\n", key2, val)
 

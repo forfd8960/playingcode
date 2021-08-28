@@ -15,7 +15,7 @@ const (
 
 type Value struct {
 	Val      interface{}
-	ExpireAt *time.Time // zero time value means, this key never expire
+	ExpireAt int64 // zero time value means, this key never expire
 }
 
 type kvstore struct {
@@ -51,7 +51,7 @@ func (kv *kvstore) RemoveExpireKeys(now time.Time) {
 
 	keys := []string{}
 	for k, v := range kv.m {
-		if v.ExpireAt.Unix()-now.Unix() <= 0 {
+		if v.ExpireAt-now.Unix() <= 0 {
 			keys = append(keys, k)
 		}
 	}
@@ -94,13 +94,13 @@ func (c *cache) Get(key string) (interface{}, bool) {
 		return nil, false
 	}
 
-	if v.ExpireAt.IsZero() {
+	if v.ExpireAt == 0 {
 		return v.Val, true
 	}
 
 	now := time.Now()
 	// this value expired
-	if v.ExpireAt.Unix()-now.Unix() <= 0 {
+	if v.ExpireAt-now.Unix() <= 0 {
 		return nil, false
 	}
 
@@ -109,13 +109,13 @@ func (c *cache) Get(key string) (interface{}, bool) {
 
 // Set set key value that never expire
 func (c *cache) Set(key string, value interface{}) {
-	c.setKeyWithExpire(key, value, &time.Time{})
+	c.setKeyWithExpire(key, value, 0)
 }
 
 // SetWithTTL set a key that will expire after ttl
 func (c *cache) SetWithTTL(key string, value interface{}, ttl time.Duration) {
 	expireAt := time.Now().Add(ttl)
-	c.setKeyWithExpire(key, value, &expireAt)
+	c.setKeyWithExpire(key, value, expireAt.Unix())
 }
 
 func (c *cache) Delete(key string) (interface{}, bool) {
@@ -129,7 +129,7 @@ func (c *cache) Delete(key string) (interface{}, bool) {
 	return v.Val, ok
 }
 
-func (c *cache) setKeyWithExpire(key string, value interface{}, expireAt *time.Time) {
+func (c *cache) setKeyWithExpire(key string, value interface{}, expireAt int64) {
 	i := xxhash.Sum64String(key) % bucketCount
 	bucket := c.data[i]
 
