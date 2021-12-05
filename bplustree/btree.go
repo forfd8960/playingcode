@@ -1,32 +1,49 @@
 package bplustree
 
 type Item struct {
-	key   int64
+	key   int
 	Value interface{}
 }
 
-type Items []*Item
-
-type Node struct {
-	items    Items
-	children Items
-}
-
+// BTree
+// Ref: https://www.cs.utexas.edu/users/djimenez/utsa/cs3343/lecture16.html
+// degree d
+//   - means the minimum chrildren a node can have, that means the min keys a node can have is: d - 1
+//   - a node can have max 2*d - 1 keys
+// btree properties
+//   1. Every node has at most 2*d childrens
+//   2. Root has at least 2 chrildren
+//   3. A internal node with k chrildren, has k - 1 keys
+//   4. All leaves appear in the same level
+//   5. A node is full when it's number of keys is 2*d - 1
 type BTree struct {
 	degree int
 	root   *Node
+	length int
 }
 
-func (b *BTree) Search(key int64) *Item {
-	return nil
+func (b *BTree) Find(key int) *Item {
+	if b.root == nil {
+		return nil
+	}
+
+	return b.root.find(key)
 }
 
 func (b *BTree) Insert(item *Item) {
+	if item == nil {
+		return
+	}
 
+	if b.root == nil {
+		b.root = new(Node)
+		b.root.items = append(b.root.items, item)
+		b.length++
+		return
+	}
 }
 
-func (b *BTree) Delete(key int64) {
-
+func (b *BTree) Delete(key int) {
 }
 
 func (b *BTree) String() string {
