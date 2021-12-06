@@ -96,6 +96,7 @@ func (n *Node) needSplitChildren(i int, maxSize int) bool {
 }
 
 func (n *Node) split(i int) (*Item, *Node) {
+	item := n.items[i]
 	second := new(Node)
 	second.items = append(second.items, n.items[i+1:]...)
 	n.items = n.items[:i]
@@ -104,5 +105,5 @@ func (n *Node) split(i int) (*Item, *Node) {
 		n.children = n.children[:i+1]
 	}
 
-	return n.items[i], second
+	return item, second
 }
