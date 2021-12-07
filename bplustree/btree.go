@@ -30,17 +30,39 @@ func (b *BTree) Find(key int) *Item {
 	return b.root.find(key)
 }
 
-func (b *BTree) Insert(item *Item) {
+func (b *BTree) Insert(item *Item) *Item {
 	if item == nil {
-		return
+		return nil
 	}
 
 	if b.root == nil {
 		b.root = new(Node)
 		b.root.items = append(b.root.items, item)
 		b.length++
-		return
+		return nil
 	}
+
+	maxSize := b.maxSize()
+
+	if len(b.root.items) >= maxSize {
+		item1, second := b.root.split(maxSize / 2)
+		root := b.root
+
+		b.root = new(Node)
+		b.root.items = append(b.root.items, item1)
+		b.root.children = append(b.root.children, root, second)
+	}
+
+	itm := b.root.insert(item, maxSize)
+	if itm == nil {
+		b.length++
+	}
+
+	return itm
+}
+
+func (b *BTree) maxSize() int {
+	return b.degree*2 - 1
 }
 
 func (b *BTree) Delete(key int) {
