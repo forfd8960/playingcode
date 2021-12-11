@@ -17,7 +17,7 @@ func TestNodeInsert(t *testing.T) {
 	}{
 		{
 			desc:    "insert to root",
-			maxSize: 2,
+			maxSize: 3,
 			n:       &Node{},
 			item:    &Item{key: 1},
 			result: &Node{items: []*Item{
@@ -26,7 +26,7 @@ func TestNodeInsert(t *testing.T) {
 		},
 		{
 			desc:    "insert more items",
-			maxSize: 2,
+			maxSize: 3,
 			item:    &Item{key: 2},
 			n: &Node{items: []*Item{
 				{key: 1},
@@ -38,7 +38,7 @@ func TestNodeInsert(t *testing.T) {
 		},
 		{
 			desc:    "insert to children",
-			maxSize: 2,
+			maxSize: 3,
 			item:    &Item{key: 5},
 			n: &Node{
 				items: []*Item{
@@ -70,6 +70,54 @@ func TestNodeInsert(t *testing.T) {
 						items: []*Item{
 							{key: 3},
 							{key: 5},
+						},
+					},
+				},
+			},
+		},
+		{
+			desc:    "insert to children and split",
+			maxSize: 3,
+			item:    &Item{key: 8},
+			n: &Node{
+				items: []*Item{
+					{key: 2},
+				},
+				children: []*Node{
+					{
+						items: []*Item{
+							{key: 1},
+						},
+					},
+					{
+						items: []*Item{
+							{key: 3},
+							{key: 5},
+							{key: 6},
+						},
+					},
+				},
+			},
+			result: &Node{
+				items: []*Item{
+					{key: 2},
+					{key: 5},
+				},
+				children: []*Node{
+					{
+						items: []*Item{
+							{key: 1},
+						},
+					},
+					{
+						items: []*Item{
+							{key: 3},
+						},
+					},
+					{
+						items: []*Item{
+							{key: 6},
+							{key: 8},
 						},
 					},
 				},

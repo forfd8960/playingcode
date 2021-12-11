@@ -1,6 +1,8 @@
 package bplustree
 
-import "sort"
+import (
+	"sort"
+)
 
 type Items []*Item
 
