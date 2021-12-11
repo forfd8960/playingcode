@@ -40,6 +40,69 @@ func TestRemoveItem(t *testing.T) {
 	assert.Equal(t, (Items)(expect), itms)
 }
 
+func TestNodeFind(t *testing.T) {
+	cases := []struct {
+		desc   string
+		n      *Node
+		key    int
+		expect *Item
+	}{
+		{
+			desc: "key in node",
+			n: &Node{
+				items: Items{
+					{key: 1},
+					{key: 8},
+					{key: 9},
+				},
+			},
+			key:    9,
+			expect: &Item{key: 9},
+		},
+		{
+			desc: "key is in child",
+			n: &Node{
+				items: Items{
+					{key: 2},
+				},
+				children: []*Node{
+					{
+						items: Items{
+							{key: 1, Value: "1"},
+						},
+					},
+					{
+						items: Items{
+							{key: 5},
+						},
+					},
+				},
+			},
+			key:    5,
+			expect: &Item{key: 5},
+		},
+		{
+			desc: "key is not in node",
+			n: &Node{
+				items: Items{
+					{key: 1},
+					{key: 8},
+					{key: 9},
+				},
+			},
+			key:    2,
+			expect: nil,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.desc, func(t *testing.T) {
+			item := tc.n.find(tc.key)
+			assert.Equal(t, tc.expect, item)
+		})
+	}
+}
+
 func TestNodeInsert(t *testing.T) {
 	cases := []struct {
 		desc   string
