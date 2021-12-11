@@ -6,6 +6,40 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestRemoveItem(t *testing.T) {
+	items := []*Item{
+		{key: 1},
+		{key: 3},
+		{key: 6},
+		{key: 8},
+	}
+
+	itms := (Items)(items)
+	itms.deleteAt(2)
+
+	expect := []*Item{
+		{key: 1},
+		{key: 3},
+		{key: 8},
+	}
+	assert.Equal(t, (Items)(expect), itms)
+
+	items = []*Item{
+		{key: 1},
+		{key: 3},
+		{key: 6},
+		{key: 8},
+	}
+	itms = (Items)(items)
+	itms.deleteAt(3)
+	expect = []*Item{
+		{key: 1},
+		{key: 3},
+		{key: 6},
+	}
+	assert.Equal(t, (Items)(expect), itms)
+}
+
 func TestNodeInsert(t *testing.T) {
 	cases := []struct {
 		desc   string

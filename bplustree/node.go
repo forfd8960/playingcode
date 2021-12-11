@@ -42,6 +42,14 @@ func (items *Items) insertAt(i int, item *Item) {
 	(*items)[i] = item
 }
 
+func (items *Items) deleteAt(i int) *Item {
+	item := (*items)[i]
+	copy((*items)[i:], (*items)[i+1:])
+	(*items)[len(*items)-1] = nil
+	*items = (*items)[:len(*items)-1]
+	return item
+}
+
 func (n *Node) find(key int) *Item {
 	i, found := n.items.find(key)
 	if found {
