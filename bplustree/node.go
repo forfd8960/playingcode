@@ -19,25 +19,25 @@ func insertAt(nodes []*Node, i int, n *Node) []*Node {
 }
 
 // https://go.dev/play/p/5GLIFnMVaCY
-func (items Items) find(key int) (int, bool) {
-	i := sort.Search(len(items), func(i int) bool {
-		return key < items[i].key
+func (items *Items) find(key int) (int, bool) {
+	i := sort.Search(len(*items), func(i int) bool {
+		return key < (*items)[i].key
 	})
 
-	if i > 0 && items[i-1].key == key {
+	if i > 0 && (*items)[i-1].key == key {
 		return i - 1, true
 	}
 
 	return i, false
 }
 
-func (items Items) insertAt(i int, item *Item) {
-	items = append(items, nil)
-	if i < len(items) {
-		copy(items[i+1:], items[i:])
+func (items *Items) insertAt(i int, item *Item) {
+	*items = append(*items, nil)
+	if i < len(*items) {
+		copy((*items)[i+1:], (*items)[i:])
 	}
 
-	items[i] = item
+	(*items)[i] = item
 }
 
 func (n *Node) find(key int) *Item {
