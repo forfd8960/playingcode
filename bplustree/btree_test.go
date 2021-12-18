@@ -168,6 +168,113 @@ func TestBtreeInsert(t *testing.T) {
 		},
 		{
 			desc: "insert into child",
+			btree: &BTree{
+				degree: 2,
+				root: &Node{
+					items: Items{
+						{key: 5},
+					},
+					children: []*Node{
+						{
+							items: Items{
+								{key: 1},
+							},
+						},
+						{
+							items: Items{
+								{key: 6},
+								{key: 8},
+							},
+						},
+					},
+				},
+				length: 4,
+			},
+			items: []*Item{
+				{key: 3},
+			},
+			expectBtree: &BTree{
+				degree: 2,
+				root: &Node{
+					items: Items{
+						{key: 5},
+					},
+					children: []*Node{
+						{
+							items: Items{
+								{key: 1},
+								{key: 3},
+							},
+						},
+						{
+							items: Items{
+								{key: 6},
+								{key: 8},
+							},
+						},
+					},
+				},
+				length: 5,
+			},
+		},
+		{
+			desc: "insert into child - split",
+			btree: &BTree{
+				degree: 2,
+				root: &Node{
+					items: Items{
+						{key: 3},
+					},
+					children: []*Node{
+						{
+							items: Items{
+								{key: 1},
+							},
+						},
+						{
+							items: Items{
+								{key: 5},
+								{key: 6},
+								{key: 8},
+							},
+						},
+					},
+				},
+				length: 5,
+			},
+			items: []*Item{
+				{key: 9},
+				{key: 11},
+			},
+			expectBtree: &BTree{
+				degree: 2,
+				root: &Node{
+					items: Items{
+						{key: 3},
+						{key: 6},
+					},
+					children: []*Node{
+						{
+							items: Items{
+								{key: 1},
+							},
+						},
+						{
+							items: Items{
+								{key: 5},
+							},
+						},
+						{
+							items: Items{
+								{key: 8},
+								{key: 9},
+								{key: 11},
+							},
+						},
+					},
+				},
+				length: 7,
+			},
 		},
 	}
 
