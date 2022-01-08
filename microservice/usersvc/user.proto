@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package pb;
+option go_package = "/pb";
+
+service user {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+}
+
+message CreateUserRequest {
+
+}
+
+message CreateUserResponse {
+
+}
+
+message GetUserRequest {
+
+}
+
+message GetUserResponse {
+
+}

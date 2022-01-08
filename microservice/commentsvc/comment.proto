@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package pb;
+option go_package = "/pb";
+
+service comment {
+  rpc PostComment(PostCommentRequest) returns (PostCommentResponse) {}
+  rpc ListComments(ListCommentsRequest) returns (ListCommentsResponse) {}
+}
+
+message PostCommentRequest {
+
+}
+
+message PostCommentResponse {
+
+}
+
+message ListCommentsRequest {
+
+}
+
+message ListCommentsResponse {
+
+}

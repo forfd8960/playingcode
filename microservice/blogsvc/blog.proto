@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package pb;
+option go_package = "/pb";
+
+service blog {
+  rpc PostBlog(PostBlogRequest) returns (PostBlogResponse) {}
+  rpc ListBlogs(ListBlogsRequest) returns (ListBlogsResponse) {}
+}
+
+message PostBlogRequest {
+
+}
+
+message PostBlogResponse {
+
+}
+
+message ListBlogsRequest {
+
+}
+
+message ListBlogsResponse {
+
+}
